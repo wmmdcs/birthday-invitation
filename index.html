@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日会邀请函</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* 防止弹窗过多出现滚动条 */
+        }
+
+        .card {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            z-index: 1;
+        }
+
+        h1 { color: #ff6b6b; margin-bottom: 15px; }
+        p { color: #555; font-size: 18px; line-height: 1.6; margin-bottom: 30px; }
+
+        .btn-group { display: flex; justify-content: center; gap: 20px; }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-yes { background-color: #4ecdc4; color: white; }
+        .btn-yes:hover { background-color: #36b9b0; transform: scale(1.05); }
+        .btn-no { background-color: #ff6b6b; color: white; }
+        .btn-no:hover { background-color: #ee5253; transform: scale(1.05); }
+
+        /* 弹窗通用样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 320px;
+            width: 85%;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-box h2 { color: #ff6b6b; margin-bottom: 10px; font-size: 22px; }
+        .modal-box p { font-size: 16px; margin-bottom: 25px; color: #666; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="main-card">
+        <h1>🎉 诚挚邀请</h1>
+        <p>亲爱的朋友：<br>诚邀您参加我的生日派对！<br>期待与您共度美好时光。</p>
+        <div class="btn-group">
+            <button class="btn-yes" onclick="acceptInvite()">我愿意</button>
+            <button class="btn-no" onclick="createRefuseModal()">拒绝</button>
+        </div>
+    </div>
+
+    <script>
+        let modalCount = 0;
+        const mainCard = document.getElementById('main-card');
+
+        // 每次点击拒绝，动态创建一个全新的弹窗
+        function createRefuseModal() {
+            modalCount++;
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            // 每层弹窗的 z-index 递增，确保新弹窗永远在最上面
+            overlay.style.zIndex = 1000 + modalCount; 
+            
+            overlay.innerHTML = `
+                <div class="modal-box">
+                    <h2>🥺 真的不参加吗？</h2>
+                    <p>没有你，生日会就不完整了...</p>
+                    <div class="btn-group">
+                        <button class="btn-yes" onclick="acceptInvite()">我愿意</button>
+                        <button class="btn-no" onclick="createRefuseModal()">拒绝</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+        }
+
+        // 接受邀请：清除所有弹窗，跳转成功页面
+        function acceptInvite() {
+            // 移除页面上所有的弹窗遮罩
+            document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+            modalCount = 0;
+            
+            // 替换为主卡片成功状态
+            mainCard.innerHTML = `
+                <h1>🎉 太棒了！</h1>
+                <p style="font-size: 24px; color: #4ecdc4;">期待你的到来！<br>不见不散！</p>
+                <div style="font-size: 50px; margin-top: 10px;">🎂🎈🥳</div>
+            `;
+        }
+    </script>
+
+</body>
+</html>
